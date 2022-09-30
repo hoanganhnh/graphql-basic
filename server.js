@@ -9,13 +9,12 @@ const { makeExecutableSchema } = require("@graphql-tools/schema");
 const { loadFilesSync } = require("@graphql-tools/load-files");
 const path = require("path");
 
-const resolvers = require("./resolver");
-
 const typeArray = loadFilesSync(path.join(__dirname, "**/*.graphql"));
+const resolversArray = loadFilesSync(path.join(__dirname, "**/*.resolver.js"));
 
 const schema = makeExecutableSchema({
   typeDefs: typeArray,
-  resolvers,
+  resolvers: resolversArray,
 });
 
 async function startApolloServer(schema) {

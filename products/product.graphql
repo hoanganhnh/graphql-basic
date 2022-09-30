@@ -12,4 +12,6 @@ type Review {
 
 type Query {
   products: [Product]
+  product(id: ID!): Product
+  productsByPrice(minPrice: Float!, maxPrice: Float!): [Product]
 }

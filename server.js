@@ -9,6 +9,8 @@ const { makeExecutableSchema } = require("@graphql-tools/schema");
 const { loadFilesSync } = require("@graphql-tools/load-files");
 const path = require("path");
 
+const { mongoConnect, mongoDisconnect } = require("./service/mongo");
+
 const typeArray = loadFilesSync(path.join(__dirname, "**/*.graphql"));
 const resolversArray = loadFilesSync(path.join(__dirname, "**/*.resolver.js"));
 
@@ -31,8 +33,14 @@ async function startApolloServer(schema) {
   });
   await server.start();
   server.applyMiddleware({ app });
+  // mongodb connect
+  await mongoConnect();
   const PORT = 4000;
-  await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));
+  await new Promise((resolve) =>
+    httpServer.listen({ port: PORT }, resolve)
+  ).catch(async () => {
+    await mongoDisconnect();
+  });
   console.log(
     `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
   );

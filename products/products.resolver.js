@@ -1,21 +1,33 @@
-const productsModel = require("./products.model");
+const productsController = require("./products.controller");
 
 module.exports = {
   Query: {
-    products: () => productsModel.getAllProducts(),
-    product: (_, args) => productsModel.getProductById(args.id),
+    products: () => productsController.getAllProducts(),
+    product: (_, args) => productsController.getProductById(args.id),
     productsByPrice: (_, args) => {
-      return productsModel.getProductsByPrice(args.minPrice, args.maxPrice);
+      return productsController.getProductsByPrice(
+        args.minPrice,
+        args.maxPrice
+      );
     },
   },
   Mutation: {
     addNewProduct: (_, args) => {
-      return productsModel.addNewProduct(args.id, args.description, args.price);
+      return productsController.addNewProduct(args.description, args.price);
     },
     addNewProductReview: (_, args) => {
-      return productsModel.addNewProductReview(
+      return productsController.addNewProductReview(
         args.id,
         args.rating,
+        args.comment
+      );
+    },
+    deleteProductById: (_, args) => {
+      return productsController.deleteProductById(args.id);
+    },
+    deleteProductReviewByProductId: async (_, args) => {
+      return await productsController.deleteProductReviewByProductId(
+        args.id,
         args.comment
       );
     },
